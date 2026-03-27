@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vehicle_datas",
+  "info": {
+    "singularName": "vehicle-data",
+    "pluralName": "vehicle-datas",
+    "displayName": "1. Vehicle Data"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Make": {
+      "type": "string",
+      "required": true
+    },
+    "Model": {
+      "type": "string",
+      "required": true
+    },
+    "Year": {
+      "type": "string",
+      "required": true
+    },
+    "Part": {
+      "type": "string",
+      "required": true
+    },
+    "Spec_Variant": {
+      "type": "string"
+    },
+    "Price_Original": {
+      "type": "decimal",
+      "required": true
+    },
+    "Deposit_Required": {
+      "type": "boolean",
+      "default": false
+    },
+    "Deposit_Percentage": {
+      "type": "decimal",
+      "default": 10.0
+    }
+  }
+}

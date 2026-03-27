@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "customers",
+  "info": {
+    "singularName": "customer",
+    "pluralName": "customers",
+    "displayName": "4. Customers"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "FullName": {
+      "type": "string"
+    },
+    "ICNumber": {
+      "type": "string",
+      "unique": true
+    },
+    "Phone": {
+      "type": "string",
+      "unique": true
+    },
+    "Email": {
+      "type": "email"
+    },
+    "CarPlates": {
+      "type": "json"
+    },
+    "bookings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::booking.booking",
+      "mappedBy": "customer"
+    }
+  }
+}

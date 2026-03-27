@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "branch_datas",
+  "info": {
+    "singularName": "branch-data",
+    "pluralName": "branch-datas",
+    "displayName": "2. Branch Data"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "BranchName": {
+      "type": "string",
+      "required": true
+    },
+    "BranchCode": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "Address": {
+      "type": "text"
+    },
+    "Contact": {
+      "type": "string"
+    },
+    "Status": {
+      "type": "enumeration",
+      "default": "Active",
+      "enum": [
+        "Active",
+        "Inactive"
+      ]
+    },
+    "LeadTimeMinutes": {
+      "type": "integer",
+      "default": 120
+    },
+    "TimeSlots": {
+      "type": "text",
+      "required": true
+    },
+    "ClosedDaysOfWeek": {
+      "type": "string"
+    },
+    "SpecificClosedDates": {
+      "type": "text"
+    },
+    "BranchPassword": {
+      "type": "string",
+      "required": true,
+      "default": "123456"
+    }
+  }
+}

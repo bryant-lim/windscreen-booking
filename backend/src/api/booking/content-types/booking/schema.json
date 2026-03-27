@@ -1,0 +1,85 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bookings",
+  "info": {
+    "singularName": "booking",
+    "pluralName": "bookings",
+    "displayName": "3. Booking Appointments"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ReferenceNumber": {
+      "type": "string",
+      "unique": true
+    },
+    "Status": {
+      "type": "enumeration",
+      "default": "Pending",
+      "enum": [
+        "Pending",
+        "Confirmed",
+        "In Progress",
+        "Completed",
+        "Cancelled"
+      ]
+    },
+    "CancellationReason": {
+      "type": "text"
+    },
+    "AppointmentDate": {
+      "type": "date"
+    },
+    "AppointmentTime": {
+      "type": "time"
+    },
+    "CarPlateNumber": {
+      "type": "string"
+    },
+    "DriverName": {
+      "type": "string"
+    },
+    "Phone": {
+      "type": "string"
+    },
+    "Email": {
+      "type": "email"
+    },
+    "ICNumber": {
+      "type": "string"
+    },
+    "TotalAmount": {
+      "type": "decimal"
+    },
+    "DepositPaid": {
+      "type": "decimal"
+    },
+    "CurlecTransactionID": {
+      "type": "string"
+    },
+    "VehicleDetailsJSON": {
+      "type": "json"
+    },
+    "BranchName": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::branch-data.branch-data"
+    },
+    "InsuranceFile": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "customer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::customer.customer",
+      "inversedBy": "bookings"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Production Build
+frontend/build/
+backend/build/
+backend/dist/
+
+# Env Files
+.env
+.env.local
+.env.*
+frontend/.env.local
+backend/.env
+
+# Logs and Misc
+*.log
+.DS_Store
+.idea/
+.vsc/
+.vscode/
+
+# Strapi Related
+backend/.strapi/
+backend/exports/
+backend/.strapi-updater.json
+backend/.strapi-cloud.json
+backend/public/uploads/*
+!backend/public/uploads/.gitkeep
+
+# Testing
+coverage/
+frontend/coverage/
+backend/coverage/
