@@ -35,8 +35,23 @@ export default function AdminAnalytics() {
 
   // --- THE AUTH GUARD ---
   const verifyStrapiAuth = () => {
-    const token = typeof window !== 'undefined' ? (localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')) : null;
-    if (token || process.env.NODE_ENV === 'development') {
+    if (typeof window === 'undefined') return;
+
+    // 1. Check if token was passed in the URL (The Cross-Origin Bridge)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+
+    if (urlToken) {
+      console.log("🛠️ Security Bridge: Token received via URL. Persisting credential.");
+      localStorage.setItem('jwtToken', urlToken);
+      setIsAuthorized(true);
+      return;
+    }
+
+    // 2. Check LocalStorage for existing session
+    const token = localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken');
+    
+    if (token) {
       setIsAuthorized(true);
     } else {
       setIsAuthorized(false);
@@ -60,6 +75,15 @@ export default function AdminAnalytics() {
     verifyStrapiAuth();
     fetchAllStats();
   }, []);
+
+  // Force Redirect if unauthorized
+  useEffect(() => {
+    // Ensuring we don't redirect too soon during hydration
+    if (isAuthorized === false && !isLoading) {
+      console.warn("🔐 Unauthorized access detected - Redirecting to Security Gateway");
+      window.location.href = "http://localhost:1338/admin";
+    }
+  }, [isAuthorized, isLoading]);
 
   const analytics = useMemo(() => {
     const stats: any = {
@@ -136,17 +160,12 @@ export default function AdminAnalytics() {
 
   return (
     <main className="min-h-screen bg-[#fafbfc] font-inter text-slate-900 pb-20 text-sm">
-      <Header hideNav={true} />
 
       {/* CRYSTAL WHITE HERO SECTION */}
       <div className="bg-white border-b border-slate-100 py-16 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                 <div className="w-2.5 h-2.5 rounded-full bg-[#f97316] animate-pulse"></div>
-                 <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#1e3a5f] opacity-60">Data Intelligence Hub</p>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none text-[#1e3a5f]">Analytics Hub</h1>
+              <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#1e3a5f]">Analytics Hub</h1>
            </div>
            
            <div className="flex items-center gap-4">
@@ -235,7 +254,7 @@ export default function AdminAnalytics() {
                   </div>
 
                   <div className="space-y-4 relative z-10">
-                     <div className="grid grid-cols-12 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 font-mono">
+                     <div className="grid grid-cols-12 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 font-inter">
                         <div className="col-span-1">Rank</div>
                         <div className="col-span-5">Vehicle Make & Model</div>
                         <div className="col-span-4 px-2">Parts & Specs</div>
