@@ -374,9 +374,9 @@ export default function Home() {
           
           {step === 1 && (
              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500 font-inter text-slate-900">
-                <div className="space-y-2.5 font-inter"> <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Car Make</label> <Combobox options={makes} value={formData.make} onChange={(v) => setFormData({...formData, make: v})} placeholder="Select Car Make" /> </div>
-                <div className="space-y-2.5 font-inter"> <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Model</label> <Combobox options={models} value={formData.model} onChange={(v) => setFormData({...formData, model: v})} placeholder="Select Model" disabled={!formData.make} /> </div>
-                <div className="space-y-2.5 font-inter"> <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Year</label> <Combobox options={years} value={formData.year} onChange={(v) => setFormData({...formData, year: v})} placeholder="Select Year" disabled={!formData.model} /> </div>
+                <div className="space-y-2.5 font-inter"> <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Car Make</label> <Combobox options={makes} value={formData.make} onChange={(v) => setFormData({...formData, make: v})} placeholder="Select Car Make" emptyMessage="Car make not found" /> </div>
+                <div className="space-y-2.5 font-inter"> <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Model</label> <Combobox options={models} value={formData.model} onChange={(v) => setFormData({...formData, model: v})} placeholder="Select Model" disabled={!formData.make} emptyMessage="Model not found" /> </div>
+                <div className="space-y-2.5 font-inter"> <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Year</label> <Combobox options={years} value={formData.year} onChange={(v) => setFormData({...formData, year: v})} placeholder="Select Year" disabled={!formData.model} emptyMessage="Year not found" /> </div>
              </div>
           )}
 
@@ -408,7 +408,7 @@ export default function Home() {
                 <div className="space-y-10 font-inter">
                    <div className="space-y-2.5 font-inter">
                        <label className="text-[11px] font-black capitalize text-[#1e3a5f] ml-1 font-inter">Branch</label>
-                      <Combobox options={branchList} value={formData.branch} onChange={(v) => { setFormData({...formData, branch: v, date: '', time: ''}); }} placeholder="Select Branch" />
+                      <Combobox options={branchList} value={formData.branch} onChange={(v) => { setFormData({...formData, branch: v, date: '', time: ''}); }} placeholder="Select Branch" emptyMessage="Branch not found" />
                    </div>
                    
                    {formData.date && availableTimes.length > 0 ? (

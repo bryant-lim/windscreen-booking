@@ -9,6 +9,7 @@ interface ComboboxProps {
   onChange: (value: string) => void;
   placeholder: string;
   disabled?: boolean;
+  emptyMessage?: string;
 }
 
 const Combobox: React.FC<ComboboxProps> = ({ 
@@ -16,7 +17,8 @@ const Combobox: React.FC<ComboboxProps> = ({
   value, 
   onChange, 
   placeholder,
-  disabled = false 
+  disabled = false,
+  emptyMessage = "No results found."
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -91,7 +93,7 @@ const Combobox: React.FC<ComboboxProps> = ({
               ))
             ) : (
               <div className="p-10 text-center space-y-2">
-                 <p className="text-[10px] font-black capitalize text-slate-300 leading-relaxed text-center">Car make not found.</p>
+                 <p className="text-[10px] font-black capitalize text-slate-300 leading-relaxed text-center">{emptyMessage}</p>
               </div>
             )}
           </div>

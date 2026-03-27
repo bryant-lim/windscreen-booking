@@ -5,11 +5,12 @@ import {
   User, MapPin, Clock, ChevronRight, ShieldCheck, FileText,
   Calendar, History, Mail, Hash, Phone, CheckCircle2, Clock3,
   Loader2, X, AlertCircle, Save, Lock, CalendarDays, Car,
-  FileUp, LayoutDashboard
+  FileUp, LayoutDashboard, Settings2
 } from 'lucide-react';
 import { auth } from '../../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import Header from '../../components/Header';
+import ManageBookingDrawer from '../../components/ManageBookingDrawer';
 import { useRouter } from 'next/navigation';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
@@ -31,7 +32,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 // ─── APPOINTMENT CARD ─────────────────────────────────────────────────────────
-const AppointmentCard = ({ bk }: { bk: any }) => {
+const AppointmentCard = ({ bk, onManage }: { bk: any, onManage: (bk: any) => void }) => {
   const b = bk.attributes || bk;
   const v = b.VehicleDetailsJSON || {};
   const status = b.Status || 'Pending';
@@ -108,6 +109,16 @@ const AppointmentCard = ({ bk }: { bk: any }) => {
             );
           });
         })()}
+        
+        {/* Manage Button — only for active appointments */}
+        {!['Completed', 'Cancelled'].includes(status) && (
+          <button 
+            onClick={() => onManage(bk)}
+            className="ml-auto flex items-center gap-2 px-4 py-2 bg-[#1e3a5f]/5 hover:bg-[#1e3a5f] text-[#1e3a5f] hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
+          >
+            <Settings2 className="w-3.5 h-3.5" /> Manage
+          </button>
+        )}
       </div>
     </div>
   );
@@ -117,6 +128,8 @@ const AppointmentCard = ({ bk }: { bk: any }) => {
 export default function UserDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'appointments' | 'profile'>('appointments');
+  const [isManageOpen, setIsManageOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -212,8 +225,9 @@ export default function UserDashboard() {
   );
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] font-inter text-slate-900 pb-24">
-      <Header />
+    <>
+      <main className="min-h-screen bg-[#fafbfc] font-inter text-slate-900 pb-24">
+        <Header />
 
       {/* Page title */}
       <div className="max-w-4xl mx-auto px-6 pt-36 pb-6">
@@ -252,7 +266,16 @@ export default function UserDashboard() {
               </div>
               {upcoming.length > 0 ? (
                 <div className="space-y-3">
-                  {upcoming.map((a, i) => <AppointmentCard key={i} bk={a} />)}
+                  {upcoming.map((bk, i) => (
+                    <AppointmentCard 
+                      key={bk.id} 
+                      bk={bk} 
+                      onManage={(b) => {
+                        setSelectedBooking(b);
+                        setIsManageOpen(true);
+                      }} 
+                    />
+                  ))}
                 </div>
               ) : (
                 <div className="border border-dashed border-[#1e3a5f]/10 rounded-[1.5rem] p-10 text-center">
@@ -270,7 +293,16 @@ export default function UserDashboard() {
               </div>
               {history.length > 0 ? (
                 <div className="space-y-3 opacity-60">
-                  {history.map((a, i) => <AppointmentCard key={i} bk={a} />)}
+                  {history.map((bk, i) => (
+                    <AppointmentCard 
+                      key={bk.id} 
+                      bk={bk} 
+                      onManage={(b) => {
+                        setSelectedBooking(b);
+                        setIsManageOpen(true);
+                      }} 
+                    />
+                  ))}
                 </div>
               ) : (
                 <div className="border border-dashed border-slate-100 rounded-[1.5rem] p-8 text-center">
@@ -348,5 +380,15 @@ export default function UserDashboard() {
         )}
       </div>
     </main>
+    <ManageBookingDrawer 
+      isOpen={isManageOpen} 
+      booking={selectedBooking} 
+      onClose={() => setIsManageOpen(false)}
+      onUpdate={() => {
+        const phone = user?.phoneNumber?.replace('+60', '').replace('+', '') || '';
+        fetchAppointments(phone);
+      }}
+    />
+    </>
   );
 }
