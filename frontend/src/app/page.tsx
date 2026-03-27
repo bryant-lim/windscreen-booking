@@ -368,9 +368,9 @@ export default function Home() {
           
           {step === 1 && (
              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500 font-poppins text-slate-900">
-                <div className="space-y-2.5 font-poppins"> <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f]/60 ml-1 font-poppins">Brand</label> <Combobox options={makes} value={formData.make} onChange={(v) => setFormData({...formData, make: v})} placeholder="Select Brand" /> </div>
-                <div className="space-y-2.5 font-poppins"> <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f]/60 ml-1 font-poppins">Model</label> <Combobox options={models} value={formData.model} onChange={(v) => setFormData({...formData, model: v})} placeholder="..." disabled={!formData.make} /> </div>
-                <div className="space-y-2.5 font-poppins"> <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f]/60 ml-1 font-poppins">Year</label> <Combobox options={years} value={formData.year} onChange={(v) => setFormData({...formData, year: v})} placeholder="..." disabled={!formData.model} /> </div>
+                <div className="space-y-2.5 font-poppins"> <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f] ml-1 font-poppins">Brand</label> <Combobox options={makes} value={formData.make} onChange={(v) => setFormData({...formData, make: v})} placeholder="Select Brand" /> </div>
+                <div className="space-y-2.5 font-poppins"> <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f] ml-1 font-poppins">Model</label> <Combobox options={models} value={formData.model} onChange={(v) => setFormData({...formData, model: v})} placeholder="..." disabled={!formData.make} /> </div>
+                <div className="space-y-2.5 font-poppins"> <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f] ml-1 font-poppins">Year</label> <Combobox options={years} value={formData.year} onChange={(v) => setFormData({...formData, year: v})} placeholder="..." disabled={!formData.model} /> </div>
              </div>
           )}
 
@@ -401,7 +401,7 @@ export default function Home() {
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 animate-in fade-in duration-500 overflow-visible font-poppins">
                 <div className="space-y-10 font-poppins">
                    <div className="space-y-2.5 font-poppins">
-                      <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f]/60 ml-1 font-poppins">Branch</label>
+                      <label className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1e3a5f] ml-1 font-poppins">Branch</label>
                       <Combobox options={branchList} value={formData.branch} onChange={(v) => { setFormData({...formData, branch: v, date: '', time: ''}); }} placeholder="Select Branch" />
                    </div>
                    
