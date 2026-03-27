@@ -57,18 +57,13 @@ export default function BranchLogin() {
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col font-inter">
-      <Header />
       
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-2 duration-700">
           
-          {/* Industrial Command Header */}
+          {/* Clean Portal Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-[#1e3a5f] rounded-2xl mb-6 shadow-2xl shadow-blue-500/20">
-              <Store className="w-7 h-7 text-white" />
-            </div>
-            <h1 className="text-2xl font-black text-[#1e3a5f] tracking-tighter uppercase mb-2">Command Portal</h1>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed">Branch Operations • System 2.0</p>
+            <h1 className="text-2xl font-black text-[#1e3a5f] tracking-tighter mb-2">Windscreen2U Branch Portal</h1>
           </div>
 
           {/* Secure Vault Container */}
@@ -77,7 +72,7 @@ export default function BranchLogin() {
               
               {/* Branch ID Field */}
               <div className="space-y-2">
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 block">Branch ID</label>
+                <label className="text-[11px] font-black text-slate-400 tracking-widest ml-1 block">Branch ID</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Store className="h-4 w-4 text-slate-300 transition-colors" />
@@ -95,10 +90,10 @@ export default function BranchLogin() {
 
               {/* Access Key Field */}
               <div className="space-y-2">
-                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 block">Access Key</label>
+                 <label className="text-[11px] font-black text-slate-400 tracking-widest ml-1 block">Password</label>
                  <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Lock className="h-4 w-4 text-slate-300 transition-colors" />
+                       <Lock className="h-4 w-4 text-slate-300 transition-colors" />
                     </div>
                     <input
                       type="password"
@@ -123,13 +118,13 @@ export default function BranchLogin() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-16 flex items-center justify-between px-6 bg-[#1e3a5f] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl shadow-blue-900/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="w-full h-16 flex items-center justify-between px-6 bg-[#1e3a5f] text-white rounded-2xl font-black text-[12px] tracking-[0.2em] shadow-2xl shadow-blue-900/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2 mx-auto"><Loader2 className="w-4 h-4 animate-spin text-white" /> Authenticating...</span>
                 ) : (
                   <>
-                    <span>Enter Command Center</span>
+                    <span>Login</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
