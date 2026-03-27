@@ -105,7 +105,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] font-poppins flex flex-col">
+    <main className="min-h-screen bg-[#fafbfc] font-inter flex flex-col">
       <Header />
       <div id="recaptcha-wrapper" />
 

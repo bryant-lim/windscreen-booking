@@ -135,7 +135,7 @@ export default function AdminAnalytics() {
   );
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] font-poppins text-slate-900 pb-20 text-sm">
+    <main className="min-h-screen bg-[#fafbfc] font-inter text-slate-900 pb-20 text-sm">
       <Header hideNav={true} />
 
       {/* CRYSTAL WHITE HERO SECTION */}

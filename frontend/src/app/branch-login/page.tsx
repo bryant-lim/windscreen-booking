@@ -56,7 +56,7 @@ export default function BranchLogin() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col font-poppins">
+    <main className="min-h-screen bg-slate-50 flex flex-col font-inter">
       <Header />
       
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12">

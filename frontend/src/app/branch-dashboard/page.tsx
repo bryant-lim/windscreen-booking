@@ -145,7 +145,7 @@ export default function BranchDashboard() {
   if (!session) return null;
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] flex flex-col font-poppins text-slate-900 pb-20">
+    <main className="min-h-screen bg-[#fafbfc] flex flex-col font-inter text-slate-900 pb-20">
       <Header hideNav={true} />
 
       {/* Industrial Sub-Header */}

@@ -62,7 +62,7 @@ export default function BranchDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 font-poppins">
+    <main className="min-h-screen bg-slate-50 font-inter">
       <Header />
       
       <div className="max-w-7xl mx-auto px-6 py-10">
@@ -142,7 +142,7 @@ export default function BranchDashboard() {
                               </div>
                            </div>
                         </td>
-                        <td className="px-6 py-6 font-poppins">
+                        <td className="px-6 py-6 font-inter">
                           <p className="text-[11px] font-black text-[#1e3a5f] uppercase tracking-tight">{attrs.DriverName}</p>
                           <p className="text-[10px] text-slate-500 mb-1">{attrs.CarPlateNumber} • {vehicle.make} {vehicle.model}</p>
                           <div className="flex items-center gap-2">

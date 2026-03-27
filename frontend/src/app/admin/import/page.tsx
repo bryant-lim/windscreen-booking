@@ -84,7 +84,7 @@ export default function AdminImport() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-poppins">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-inter">
       <Header />
       <div className="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
         

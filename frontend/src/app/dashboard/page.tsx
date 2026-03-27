@@ -62,7 +62,7 @@ const AppointmentCard = ({ bk }: { bk: any }) => {
             <CalendarDays className="w-4 h-4 text-[#1e3a5f]/60" />
           </div>
           <div>
-            <p className="text-[11px] font-black text-[#1e3a5f] font-poppins">
+            <p className="text-[11px] font-black text-[#1e3a5f] font-inter">
               {fmtDate(b.AppointmentDate)}  ·  {fmtTime(b.AppointmentTime)}
             </p>
             <p className="text-[10px] font-medium text-slate-400 flex items-center gap-1 mt-0.5">
@@ -89,16 +89,25 @@ const AppointmentCard = ({ bk }: { bk: any }) => {
             {b.CarPlateNumber}
           </span>
         )}
-        {fileUrl && (
-          <a
-            href={`${STRAPI_URL}${fileUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-[10px] font-bold text-[#1e3a5f]/50 hover:text-[#1e3a5f] transition-colors"
-          >
-            <FileUp className="w-3.5 h-3.5" /> View Doc
-          </a>
-        )}
+        {(() => {
+          const files = b.InsuranceFile?.data || (Array.isArray(b.InsuranceFile) ? b.InsuranceFile : []);
+          if (!files?.length) return null;
+          return files.map((file: any, idx: number) => {
+            const url = file.attributes?.url || file.url;
+            if (!url) return null;
+            return (
+              <a
+                key={idx}
+                href={`${STRAPI_URL}${url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-[9px] font-black text-[#1e3a5f]/40 bg-[#1e3a5f]/5 px-2.5 py-1 rounded-lg hover:bg-[#1e3a5f] hover:text-white transition-all border border-[#1e3a5f]/5"
+              >
+                <FileUp className="w-3 h-3" /> File {idx + 1}
+              </a>
+            );
+          });
+        })()}
       </div>
     </div>
   );
@@ -203,7 +212,7 @@ export default function UserDashboard() {
   );
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] font-poppins text-slate-900 pb-24">
+    <main className="min-h-screen bg-[#fafbfc] font-inter text-slate-900 pb-24">
       <Header />
 
       {/* Page title */}

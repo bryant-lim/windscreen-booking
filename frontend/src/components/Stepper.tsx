@@ -21,7 +21,7 @@ export default function Stepper({ currentStep }: StepperProps) {
     <div className="w-full py-8 max-w-5xl mx-auto px-4 md:px-0 mt-8 mb-4">
       {/* Title block */}
       <div className="text-center mb-10">
-        <h1 className="text-2xl md:text-4xl font-black font-poppins text-[#1e3a5f] tracking-tighter uppercase">
+        <h1 className="text-2xl md:text-3xl font-black font-inter text-[#1e3a5f] tracking-tight">
           Book Your Appointment
         </h1>
       </div>
@@ -56,7 +56,7 @@ export default function Stepper({ currentStep }: StepperProps) {
 
               <div 
                 className={clsx(
-                  "absolute -bottom-10 whitespace-nowrap text-[11px] font-black uppercase tracking-[0.2em] transition-colors duration-300",
+                  "absolute -bottom-10 whitespace-nowrap text-[11px] font-black tracking-tight transition-colors duration-300",
                   isActive ? "text-[#1e3a5f]" : 
                   isCompleted ? "text-slate-600" : 
                   "text-slate-300"

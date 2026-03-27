@@ -48,7 +48,7 @@ const Combobox: React.FC<ComboboxProps> = ({
           isOpen ? 'bg-white border-[#1e3a5f] shadow-xl shadow-[#1e3a5f]/5 ring-1 ring-[#1e3a5f]/10' : 'bg-transparent border-[#1e3a5f]/20 hover:border-[#1e3a5f]'
         }`}
       >
-        <span className={`text-[11px] font-bold uppercase tracking-widest truncate ${value ? 'text-[#1e3a5f]' : 'text-slate-400'}`}>
+        <span className={`text-[11px] font-bold capitalize truncate ${value ? 'text-[#1e3a5f]' : 'text-slate-400'}`}>
           {value || placeholder}
         </span>
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-500 ${isOpen ? 'rotate-180 text-[#1e3a5f]' : 'text-slate-300'}`} />
@@ -76,7 +76,7 @@ const Combobox: React.FC<ComboboxProps> = ({
               filteredOptions.map((opt, i) => (
                 <button
                   key={i}
-                  className={`w-full text-left p-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all mb-0.5 flex items-center justify-between ${
+                  className={`w-full text-left p-3 rounded-xl text-[10px] font-black capitalize transition-all mb-0.5 flex items-center justify-between ${
                     value === opt ? 'bg-[#1e3a5f] text-white shadow-lg' : 'text-slate-500 hover:bg-[#1e3a5f]/5 hover:text-[#1e3a5f]'
                   }`}
                   onClick={() => {
@@ -91,7 +91,7 @@ const Combobox: React.FC<ComboboxProps> = ({
               ))
             ) : (
               <div className="p-10 text-center space-y-2">
-                 <p className="text-[10px] font-black uppercase text-slate-300 tracking-[0.2em] leading-relaxed">Car Brand not found.</p>
+                 <p className="text-[10px] font-black capitalize text-slate-300 leading-relaxed text-center">Car make not found.</p>
               </div>
             )}
           </div>
