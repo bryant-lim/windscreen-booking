@@ -212,10 +212,25 @@ export default function UserDashboard() {
 
   const { upcoming, history } = useMemo(() => {
     const upStatuses = ['Pending', 'Confirmed', 'In Progress'];
-    return {
-      upcoming: appointments.filter(a => upStatuses.includes((a.attributes || a).Status)),
-      history:  appointments.filter(a => !upStatuses.includes((a.attributes || a).Status)),
-    };
+    
+    // Global sort helper (Date + Time)
+    const sorted = [...appointments].sort((a, b) => {
+      const aa = a.attributes || a;
+      const bb = b.attributes || b;
+      const dateA = aa.AppointmentDate || '';
+      const dateB = bb.AppointmentDate || '';
+      
+      if (dateA !== dateB) return dateA.localeCompare(dateB);
+      
+      const timeA = aa.AppointmentTime || '';
+      const timeB = bb.AppointmentTime || '';
+      return timeA.localeCompare(timeB);
+    });
+
+    const up = sorted.filter(a => upStatuses.includes((a.attributes || a).Status));
+    const hist = sorted.filter(a => !upStatuses.includes((a.attributes || a).Status)).reverse();
+
+    return { upcoming: up, history: hist };
   }, [appointments]);
 
   if (isLoading) return (
