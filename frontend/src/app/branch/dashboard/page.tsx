@@ -5,6 +5,7 @@ import Header from '../../../components/Header';
 import { Calendar, Filter, Clock, MoreVertical, X, Check, Truck, AlertCircle } from 'lucide-react';
 
 export default function BranchDashboard() {
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
   const [selectedBranch, setSelectedBranch] = useState('');
   const [bookings, setBookings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +29,7 @@ export default function BranchDashboard() {
         filterParams += `&filters[AppointmentDate][$eq]=${today}`;
       }
 
-      const res = await fetch(`http://localhost:1338/api/bookings?${filterParams}&sort[0]=AppointmentTime:asc`);
+      const res = await fetch(`${STRAPI_URL}/api/bookings?${filterParams}&sort[0]=AppointmentTime:asc`);
       const json = await res.json();
       if (json.data) setBookings(json.data);
     } catch (err) {
@@ -40,7 +41,7 @@ export default function BranchDashboard() {
 
   const updateStatus = async (id: number, newStatus: string, reason?: string) => {
     try {
-      const res = await fetch(`http://localhost:1338/api/bookings/${id}`, {
+      const res = await fetch(`${STRAPI_URL}/api/bookings/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -62,7 +63,7 @@ export default function BranchDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 font-poppins">
+    <main className="min-h-screen bg-slate-50 font-inter">
       <Header />
       
       <div className="max-w-7xl mx-auto px-6 py-10">
@@ -142,7 +143,7 @@ export default function BranchDashboard() {
                               </div>
                            </div>
                         </td>
-                        <td className="px-6 py-6 font-poppins">
+                        <td className="px-6 py-6 font-inter">
                           <p className="text-[11px] font-black text-[#1e3a5f] uppercase tracking-tight">{attrs.DriverName}</p>
                           <p className="text-[10px] text-slate-500 mb-1">{attrs.CarPlateNumber} • {vehicle.make} {vehicle.model}</p>
                           <div className="flex items-center gap-2">

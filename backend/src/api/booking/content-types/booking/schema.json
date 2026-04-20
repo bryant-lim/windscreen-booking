@@ -80,6 +80,14 @@
       "relation": "manyToOne",
       "target": "api::customer.customer",
       "inversedBy": "bookings"
+    },
+    "PaymentMode": {
+      "type": "enumeration",
+      "enum": [
+        "Cash",
+        "Insurance"
+      ],
+      "default": "Cash"
     }
   }
 }

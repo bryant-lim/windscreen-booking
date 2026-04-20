@@ -105,103 +105,94 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] font-poppins flex flex-col">
+    <main className="min-h-screen bg-[#fafbfc] font-inter flex flex-col">
       <Header />
       <div id="recaptcha-wrapper" />
 
       <div className="flex-1 flex items-center justify-center px-6 pt-28 pb-12">
         <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
-
-          {/* Logo / Title */}
-          <div className="text-center mb-10 space-y-2">
-            <div className="inline-flex w-14 h-14 bg-[#1e3a5f] rounded-2xl items-center justify-center mb-4 shadow-xl shadow-[#1e3a5f]/20">
-              <Phone className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-black text-[#1e3a5f] capitalize tracking-tight">
-              {stage === 'newUser' ? 'Complete Your Profile' : 'Welcome Back'}
-            </h1>
-            <p className="text-[11px] font-medium text-slate-400">
-              {stage === 'phone' && 'Sign in with your mobile number'}
-              {stage === 'otp' && `OTP sent to +60${phone}`}
-              {stage === 'newUser' && 'Just a few details to get you started'}
-            </p>
-          </div>
-
           {/* Card */}
-          <div className="bg-white border border-[#1e3a5f]/10 rounded-[2rem] p-8 space-y-5 shadow-xl shadow-[#1e3a5f]/5">
+          <div className="bg-white border border-primary/10 rounded-[2.5rem] p-10 space-y-8 shadow-xl shadow-primary/5">
+
+            {/* Header moved inside card */}
+            <div className="mb-2">
+              <h1 className="text-xl font-black text-primary capitalize tracking-tight">
+                {stage === 'newUser' ? 'Complete Profile' : 'Welcome Back'}
+              </h1>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                {stage === 'phone' && 'Sign in with your mobile number'}
+                {stage === 'otp' && `OTP sent to +60${phone}`}
+                {stage === 'newUser' && 'A few details to get started'}
+              </p>
+            </div>
 
             {/* ── STAGE: Phone ── */}
             {stage === 'phone' && (
-              <>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold capitalize tracking-wide text-[#1e3a5f]/60 ml-1 flex items-center gap-1.5">
-                    <Phone className="w-3 h-3" /> Phone Number
-                  </label>
-                  <div className="flex gap-2">
-                    <div className="p-4 bg-slate-50 border border-[#1e3a5f]/10 rounded-2xl text-[11px] font-black text-[#1e3a5f]/60">+60</div>
+              <div className="space-y-6 pt-2">
+                <div className="space-y-2">
+                  <div className="flex border border-primary/10 rounded-2xl overflow-hidden bg-slate-50/30 focus-within:border-accent transition-all">
+                    <div className="px-5 py-4 bg-slate-50 border-r border-primary/5 text-[11px] font-black text-primary/40 flex items-center">+60</div>
                     <input
                       type="tel"
                       value={phone}
                       onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
-                      placeholder="123456789"
-                      className="flex-1 p-4 bg-white border border-[#1e3a5f]/20 rounded-2xl text-xs font-bold text-[#1e3a5f] outline-none focus:border-[#1e3a5f] transition-all"
+                      placeholder="Mobile Phone Number"
+                      className="flex-1 p-4 bg-transparent text-xs font-black text-primary outline-none placeholder:text-slate-300"
                       onKeyDown={e => e.key === 'Enter' && sendOTP()}
                     />
                   </div>
                 </div>
-                {error && <p className="text-[10px] text-red-500 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
+                {error && <p className="text-[10px] text-red-500 font-bold flex items-center gap-1.5 ml-1"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
                 <button
                   onClick={sendOTP}
                   disabled={loading}
-                  className="w-full py-4 bg-[#1e3a5f] hover:bg-[#152a45] text-white rounded-2xl text-[10px] font-black capitalize tracking-wide shadow-lg shadow-[#1e3a5f]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-4 bg-primary hover:bg-accent text-white rounded-[20px] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><span>Send OTP</span><ChevronRight className="w-4 h-4" /></>}
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><span>Get OTP Code</span><ChevronRight className="w-4 h-4" /></>}
                 </button>
-              </>
+              </div>
             )}
 
             {/* ── STAGE: OTP ── */}
             {stage === 'otp' && (
-              <>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold capitalize tracking-wide text-[#1e3a5f]/60 ml-1">Enter OTP</label>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-primary/40 ml-1">Enter OTP</label>
                   <input
                     type="text"
                     inputMode="numeric"
                     maxLength={6}
                     value={otp}
                     onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
-                    placeholder="6-digit code"
-                    className="w-full p-4 bg-white border border-[#1e3a5f]/20 rounded-2xl text-center text-lg font-black tracking-[0.5em] text-[#1e3a5f] outline-none focus:border-[#1e3a5f] transition-all"
+                    placeholder="— — — — — —"
+                    className="w-full p-6 bg-slate-50 border border-primary/10 rounded-2xl text-center text-xl font-black tracking-[0.5em] text-primary outline-none focus:border-accent transition-all placeholder:text-slate-200"
                     onKeyDown={e => e.key === 'Enter' && verifyOTP()}
                   />
                 </div>
-                {error && <p className="text-[10px] text-red-500 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
+                {error && <p className="text-[10px] text-red-500 font-bold flex items-center gap-1.5 ml-1"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
                 <button
                   onClick={verifyOTP}
                   disabled={loading || otp.length !== 6}
-                  className="w-full py-4 bg-[#1e3a5f] hover:bg-[#152a45] text-white rounded-2xl text-[10px] font-black capitalize tracking-wide shadow-lg shadow-[#1e3a5f]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-30"
+                  className="w-full py-4 bg-primary hover:bg-accent text-white rounded-[20px] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2 disabled:opacity-30"
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><span>Verify & Continue</span><ChevronRight className="w-4 h-4" /></>}
                 </button>
-                <button onClick={() => { setStage('phone'); setOtp(''); setError(''); }} className="w-full text-[10px] text-slate-400 hover:text-[#1e3a5f] transition-colors capitalize">
-                  ← Change number
+                <button onClick={() => { setStage('phone'); setOtp(''); setError(''); }} className="w-full text-[9px] font-black text-slate-400 hover:text-accent transition-colors uppercase tracking-widest">
+                  ← Change mobile number
                 </button>
-              </>
+              </div>
             )}
 
             {/* ── STAGE: New User Profile ── */}
             {stage === 'newUser' && (
-              <>
-                {[
-                  { label: 'Full Name', icon: User, key: 'fullName', placeholder: 'As per IC', type: 'text' },
-                  { label: 'IC Number', icon: Hash, key: 'ic', placeholder: 'xxxxxx-xx-xxxx', type: 'text' },
-                  { label: 'Email Address', icon: Mail, key: 'email', placeholder: 'Optional', type: 'email' },
-                ].map(({ label, icon: Icon, key, placeholder, type }) => (
-                  <div key={key} className="space-y-1.5">
-                    <label className="text-[11px] font-bold capitalize tracking-wide text-[#1e3a5f]/60 ml-1 flex items-center gap-1.5">
-                      <Icon className="w-3 h-3" /> {label}
-                    </label>
+              <div className="space-y-6">
+                 {[
+                  { label: 'Full Name', key: 'fullName', placeholder: 'As per IC', type: 'text' },
+                  { label: 'IC Number', key: 'ic', placeholder: 'xxxxxx-xx-xxxx', type: 'text' },
+                  { label: 'Email Address', key: 'email', placeholder: 'your@email.com (Optional)', type: 'email' },
+                ].map(({ label, key, placeholder, type }) => (
+                  <div key={key} className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40 ml-1">{label}</label>
                     <input
                       type={type}
                       value={(newProfile as any)[key]}
@@ -210,19 +201,19 @@ export default function LoginPage() {
                         [key]: key === 'ic' ? formatIC(e.target.value) : e.target.value
                       }))}
                       placeholder={placeholder}
-                      className="w-full p-4 bg-white border border-[#1e3a5f]/20 rounded-2xl text-xs font-bold text-[#1e3a5f] outline-none focus:border-[#1e3a5f] transition-all"
+                      className="w-full p-4 bg-slate-50 border border-primary/10 rounded-2xl text-xs font-black text-primary outline-none focus:border-accent transition-all placeholder:text-slate-300"
                     />
                   </div>
                 ))}
-                {error && <p className="text-[10px] text-red-500 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
+                {error && <p className="text-[10px] text-red-500 font-bold flex items-center gap-1.5 ml-1"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
                 <button
                   onClick={saveNewProfile}
                   disabled={loading || !newProfile.fullName || !newProfile.ic}
-                  className="w-full py-4 bg-[#1e3a5f] hover:bg-[#152a45] text-white rounded-2xl text-[10px] font-black capitalize tracking-wide shadow-lg shadow-[#1e3a5f]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-30"
+                  className="w-full py-4 bg-primary hover:bg-accent text-white rounded-[20px] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2 disabled:opacity-30"
                 >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><span>Save & Continue</span><ChevronRight className="w-4 h-4" /></>}
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><span>Save & Explore Dashboard</span><ChevronRight className="w-4 h-4" /></>}
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>

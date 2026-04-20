@@ -22,12 +22,14 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
+
 async function fetchStrapiCustomer(phone: string) {
   try {
     // Firebase stores phone with country code e.g. "+601234567890"
     // Try exact match first, then strip the +60 prefix
     const res = await fetch(
-      `http://localhost:1338/api/customers?filters[Phone][$eq]=${encodeURIComponent(phone)}`
+      `${STRAPI_URL}/api/customers?filters[Phone][$eq]=${encodeURIComponent(phone)}`
     );
     const json = await res.json();
     if (json.data?.[0]) return json.data[0];
@@ -35,7 +37,7 @@ async function fetchStrapiCustomer(phone: string) {
     // Fallback: try without country code prefix
     const localPhone = phone.replace(/^\+60/, '');
     const res2 = await fetch(
-      `http://localhost:1338/api/customers?filters[Phone][$eq]=${localPhone}`
+      `${STRAPI_URL}/api/customers?filters[Phone][$eq]=${localPhone}`
     );
     const json2 = await res2.json();
     return json2.data?.[0] || null;

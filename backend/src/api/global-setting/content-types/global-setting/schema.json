@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_settings",
+  "info": {
+    "singularName": "global-setting",
+    "pluralName": "global-settings",
+    "displayName": "Global Setting",
+    "description": "Store site-wide configurations"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "WhatsAppNumber": {
+      "type": "string",
+      "required": true,
+      "default": "+60122329389"
+    }
+  }
+}

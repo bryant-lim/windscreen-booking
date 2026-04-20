@@ -465,6 +465,8 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       'api::booking.booking'
     > &
       Schema.Attribute.Private;
+    PaymentMode: Schema.Attribute.Enumeration<['Cash', 'Insurance']> &
+      Schema.Attribute.DefaultTo<'Cash'>;
     Phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     ReferenceNumber: Schema.Attribute.String & Schema.Attribute.Unique;
@@ -555,6 +557,37 @@ export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
+  collectionName: 'global_settings';
+  info: {
+    description: 'Store site-wide configurations';
+    displayName: 'Global Setting';
+    pluralName: 'global-settings';
+    singularName: 'global-setting';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::global-setting.global-setting'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    WhatsAppNumber: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'+60122329389'>;
+  };
+}
+
 export interface ApiVehicleDataVehicleData extends Struct.CollectionTypeSchema {
   collectionName: 'vehicle_datas';
   info: {
@@ -582,8 +615,10 @@ export interface ApiVehicleDataVehicleData extends Struct.CollectionTypeSchema {
     Make: Schema.Attribute.String & Schema.Attribute.Required;
     Model: Schema.Attribute.String & Schema.Attribute.Required;
     Part: Schema.Attribute.String & Schema.Attribute.Required;
+    Price_Aftermarket: Schema.Attribute.Decimal;
     Price_Original: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    Repair_Price: Schema.Attribute.Decimal;
     Spec_Variant: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1106,6 +1141,7 @@ declare module '@strapi/strapi' {
       'api::booking.booking': ApiBookingBooking;
       'api::branch-data.branch-data': ApiBranchDataBranchData;
       'api::customer.customer': ApiCustomerCustomer;
+      'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
       'api::vehicle-data.vehicle-data': ApiVehicleDataVehicleData;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

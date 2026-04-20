@@ -28,12 +28,20 @@ interface BranchSession {
 }
 
 export default function BranchDashboard() {
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
   const [session, setSession] = useState<BranchSession | null>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [focusTab, setFocusTab] = useState<'Today' | 'Tomorrow' | 'Upcoming' | 'Archive'>('Today');
+  const [focusTab, setFocusTab] = useState<'Today' | 'Tomorrow' | 'Upcoming' | 'Total Completed'>('Today');
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // 0. Live Clock
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // 1. Session & Auth Guard
   useEffect(() => {
@@ -52,7 +60,7 @@ export default function BranchDashboard() {
       setIsLoading(true);
       console.log("🛠️ Fetching for branch command center:", session.name);
       
-      const res = await fetch(`http://localhost:1338/api/bookings?filters[BranchName][BranchName][$eq]=${encodeURIComponent(session.name)}&sort[0]=AppointmentDate:asc&sort[1]=AppointmentTime:asc&populate[0]=InsuranceFile&populate[1]=BranchName`);
+      const res = await fetch(`${STRAPI_URL}/api/bookings?filters[BranchName][BranchName][$eq]=${encodeURIComponent(session.name)}&sort[0]=AppointmentDate:asc&sort[1]=AppointmentTime:asc&populate[0]=InsuranceFile&populate[1]=BranchName`);
       const data = await res.json();
       
       if (data.data) {
@@ -74,7 +82,7 @@ export default function BranchDashboard() {
     setIsUpdating(String(targetId));
     
     try {
-      const res = await fetch(`http://localhost:1338/api/bookings/${targetId}`, {
+      const res = await fetch(`${STRAPI_URL}/api/bookings/${targetId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data: { Status: newStatus } })
@@ -109,11 +117,25 @@ export default function BranchDashboard() {
       active,
       today: nonActive.filter(b => {
         const d = (b.attributes?.AppointmentDate || b.AppointmentDate);
-        return d === today && (b.attributes?.Status || b.Status) !== 'Completed';
+        const s = (b.attributes?.Status || b.Status);
+        return d === today && s === 'Confirmed';
       }),
-      tomorrow: nonActive.filter(b => (b.attributes?.AppointmentDate || b.AppointmentDate) === tomorrow),
-      upcoming: nonActive.filter(b => (b.attributes?.AppointmentDate || b.AppointmentDate) > tomorrow),
-      archive: bookings.filter(b => (b.attributes?.Status || b.Status) === 'Completed')
+      tomorrow: nonActive.filter(b => {
+        const d = (b.attributes?.AppointmentDate || b.AppointmentDate);
+        const s = (b.attributes?.Status || b.Status);
+        return d === tomorrow && s === 'Confirmed';
+      }),
+      upcoming: nonActive.filter(b => {
+        const d = (b.attributes?.AppointmentDate || b.AppointmentDate);
+        const s = (b.attributes?.Status || b.Status);
+        return d > tomorrow && s === 'Confirmed';
+      }),
+      archive: bookings.filter(b => (b.attributes?.Status || b.Status) === 'Completed'),
+      todayCompleted: bookings.filter(b => {
+        const d = (b.attributes?.AppointmentDate || b.AppointmentDate);
+        const s = (b.attributes?.Status || b.Status);
+        return d === today && s === 'Completed';
+      })
     };
   }, [bookings]);
 
@@ -122,7 +144,7 @@ export default function BranchDashboard() {
     if (focusTab === 'Today') list = categorized.today;
     else if (focusTab === 'Tomorrow') list = categorized.tomorrow;
     else if (focusTab === 'Upcoming') list = categorized.upcoming;
-    else if (focusTab === 'Archive') list = categorized.archive;
+    else if (focusTab === 'Total Completed') list = categorized.archive;
 
     if (!searchQuery) return list;
     return list.filter(b => {
@@ -145,26 +167,40 @@ export default function BranchDashboard() {
   if (!session) return null;
 
   return (
-    <main className="min-h-screen bg-[#fafbfc] flex flex-col font-poppins text-slate-900 pb-20">
-      <Header hideNav={true} />
+    <main className="min-h-screen bg-[#fafbfc] flex flex-col font-inter text-slate-900 pb-20">
 
       {/* Industrial Sub-Header */}
-      <div className="bg-[#1e3a5f] text-white py-12 md:py-16 px-6">
+      <div className="bg-[#f97316] text-white py-12 md:py-16 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="space-y-3">
              <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Operations Hub • Live</p>
              </div>
-             <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">{session.name}</h1>
-             <p className="text-xs font-bold opacity-70 tracking-widest uppercase">Terminal: {session.code} • Semenyih Master Command</p>
+             <h1 className="text-3xl md:text-5xl font-black tracking-tighter">
+               {session.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+             </h1>
+             <p className="text-xs font-bold opacity-70 tracking-widest uppercase text-emerald-400">Branch Code: {session.code}</p>
           </div>
-          <button 
-            onClick={() => { sessionStorage.clear(); window.location.href='/branch-login'; }}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
-          >
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
+          
+          <div className="flex flex-col items-end gap-3 translate-y-2">
+            <button 
+                onClick={() => { sessionStorage.clear(); window.location.href='/branch-login'; }}
+                className="flex items-center gap-2 bg-white/10 hover:bg-orange-500 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all mb-1 border border-white/10 hover:border-orange-500"
+            >
+                <LogOut className="w-4 h-4" /> Sign Out
+            </button>
+
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 px-6 py-3 rounded-2xl flex flex-col items-end min-w-[200px]">
+               <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Current Date & Time</p>
+               <p className="text-xl font-black tabular-nums tracking-tight">
+                  {currentTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+               </p>
+               <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mt-1">
+                  {currentTime.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
+               </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -176,7 +212,7 @@ export default function BranchDashboard() {
              { label: 'In Replacement', val: categorized.active.length, icon: CarFront, color: 'text-orange-500' },
              { label: 'Due Today', val: categorized.today.length, icon: Clock, color: 'text-blue-500' },
              { label: 'Incoming', val: categorized.tomorrow.length, icon: Calendar, color: 'text-indigo-400' },
-             { label: 'Logged Today', val: categorized.archive.length, icon: CheckCircle2, color: 'text-emerald-500' }
+             { label: 'Logged Today', val: categorized.todayCompleted.length, icon: CheckCircle2, color: 'text-emerald-500' }
            ].map((stat, i) => (
              <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl flex items-center justify-between group">
                 <div>
@@ -194,14 +230,14 @@ export default function BranchDashboard() {
              { id: 'Today', icon: CarFront, count: categorized.today.length },
              { id: 'Tomorrow', icon: Calendar, count: categorized.tomorrow.length },
              { id: 'Upcoming', icon: History, count: categorized.upcoming.length },
-             { id: 'Archive', icon: CheckCircle2, count: categorized.archive.length }
+             { id: 'Total Completed', icon: CheckCircle2, count: categorized.archive.length }
            ].map((tab) => (
              <button
                key={tab.id}
                onClick={() => setFocusTab(tab.id as any)}
                className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-3xl transition-all duration-300 group ${
                  focusTab === tab.id 
-                 ? 'bg-[#1e3a5f] text-white shadow-2xl shadow-blue-500/20 active:scale-95' 
+                 ? 'bg-[#f97316] text-white shadow-2xl shadow-blue-500/20 active:scale-95' 
                  : 'hover:bg-slate-50 text-slate-400'
                }`}
              >
@@ -216,13 +252,13 @@ export default function BranchDashboard() {
 
         {/* Search Bar (High Visibility) */}
         <div className="relative group">
-          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#1e3a5f] transition-colors" />
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#f97316] transition-colors" />
           <input 
             type="text" 
-            placeholder="Search active queue by Plate, Driver, or Ref..."
+            placeholder="Search by Car Plate / Driver Name / Ref ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-6 py-6 font-black text-[#1e3a5f] text-sm shadow-xl focus:ring-4 focus:ring-blue-500/5 outline-none"
+            className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-6 py-6 font-black text-[#f97316] text-sm shadow-xl focus:ring-4 focus:ring-blue-500/5 outline-none"
           />
         </div>
 
@@ -240,12 +276,12 @@ export default function BranchDashboard() {
         {/* --- THE FOCUS DECK --- */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-2">
-             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{focusTab} Schedule</p>
+             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{focusTab === 'Total Completed' ? 'History' : focusTab}</p>
           </div>
           {isLoading ? (
-            <div className="py-20 text-center"><Loader2 className="w-10 h-10 animate-spin text-[#1e3a5f] mx-auto opacity-20" /></div>
+            <div className="py-20 text-center"><Loader2 className="w-10 h-10 animate-spin text-[#f97316] mx-auto opacity-20" /></div>
           ) : displayedList.length === 0 ? (
-            <div className="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100 text-slate-300 font-bold text-sm uppercase tracking-widest">No entries for this period</div>
+            <div className="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100 text-slate-300 font-bold text-sm tracking-widest">No Entries For This Period</div>
           ) : (
             displayedList.map((b) => renderJobCard(b))
           )}
@@ -276,8 +312,7 @@ export default function BranchDashboard() {
         <div className="flex flex-col md:flex-row gap-8 items-center justify-between relative z-10">
           
           <div className="flex items-center gap-6 md:w-1/4 shrink-0">
-             <div className={`${isPinned ? 'bg-orange-500' : 'bg-[#1e3a5f]'} p-4 rounded-2xl flex flex-col items-center justify-center shadow-xl min-w-[120px] transition-colors`}>
-                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Plate Number</p>
+             <div className={`${isPinned ? 'bg-orange-500' : 'bg-[#f97316]'} px-6 py-5 rounded-2xl flex flex-col items-center justify-center shadow-xl min-w-[140px] transition-colors`}>
                 <p className="text-xl font-black text-white tracking-[0.1em]">{attrs.CarPlateNumber}</p>
              </div>
              <div className={`px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.1em] border ${getStatusColor(attrs.Status)}`}>
@@ -304,7 +339,7 @@ export default function BranchDashboard() {
                           return (
                             <a 
                               key={f.id} 
-                              href={`http://localhost:1338${fileAttrs.url}`} 
+                              href={`${STRAPI_URL}${fileAttrs.url}`} 
                               target="_blank" 
                               className="w-5 h-5 flex items-center justify-center bg-white text-blue-600 text-[9px] font-black rounded-md border border-blue-200 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
                             >
@@ -316,7 +351,7 @@ export default function BranchDashboard() {
                    );
                 })()}
              </div>
-             <h4 className="text-sm font-black text-[#1e3a5f] uppercase tracking-tight truncate leading-tight">
+             <h4 className="text-sm font-black text-[#f97316] uppercase tracking-tight truncate leading-tight">
                 {vehicle?.year} {vehicle?.make} {vehicle?.model}
              </h4>
              <p className="text-[10px] font-black text-slate-500 uppercase tracking-tight truncate">
