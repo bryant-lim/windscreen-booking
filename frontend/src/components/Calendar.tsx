@@ -58,9 +58,9 @@ export default function Calendar({
         onClick={() => !isBlocked && onSelectDate(dateStr)}
         className={clsx(
           "h-10 flex items-center justify-center rounded-lg text-sm font-bold transition-all cursor-pointer relative group",
-          isSelected ? "bg-[#1e3a5f] text-white shadow-lg" : 
+          isSelected ? "bg-accent text-white shadow-lg" : 
           isBlocked ? "text-slate-200 cursor-not-allowed bg-slate-50/50" : 
-          "text-slate-700 hover:bg-[#f5a623]/10 hover:text-[#f5a623]"
+          "text-slate-700 hover:bg-accent/10 hover:text-accent"
         )}
       >
         {day}
@@ -76,7 +76,7 @@ export default function Calendar({
   return (
     <div className="w-full bg-white rounded-xl border border-slate-100 p-5 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-[#1e3a5f] text-sm tracking-wide uppercase">
+        <h3 className="font-bold text-primary text-sm tracking-wide uppercase">
           {monthNames[month]} {year}
         </h3>
         <div className="flex gap-2">
@@ -110,7 +110,7 @@ export default function Calendar({
             <span className="text-[10px] uppercase font-bold text-slate-500 tracking-tighter">Unavailable</span>
          </div>
          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 bg-[#1e3a5f] rounded-sm"></div>
+            <div className="w-2.5 h-2.5 bg-accent rounded-sm"></div>
             <span className="text-[10px] uppercase font-bold text-slate-500 tracking-tighter">Selected</span>
          </div>
          <div className="flex items-center gap-1.5">

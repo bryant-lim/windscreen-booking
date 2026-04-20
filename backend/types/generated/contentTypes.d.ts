@@ -465,6 +465,8 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       'api::booking.booking'
     > &
       Schema.Attribute.Private;
+    PaymentMode: Schema.Attribute.Enumeration<['Cash', 'Insurance']> &
+      Schema.Attribute.DefaultTo<'Cash'>;
     Phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     ReferenceNumber: Schema.Attribute.String & Schema.Attribute.Unique;
@@ -613,8 +615,10 @@ export interface ApiVehicleDataVehicleData extends Struct.CollectionTypeSchema {
     Make: Schema.Attribute.String & Schema.Attribute.Required;
     Model: Schema.Attribute.String & Schema.Attribute.Required;
     Part: Schema.Attribute.String & Schema.Attribute.Required;
+    Price_Aftermarket: Schema.Attribute.Decimal;
     Price_Original: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    Repair_Price: Schema.Attribute.Decimal;
     Spec_Variant: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

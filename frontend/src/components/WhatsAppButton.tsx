@@ -42,7 +42,7 @@ const WhatsAppButton = () => {
       aria-label="Contact support on WhatsApp"
     >
       {/* Tooltip */}
-      <span className="absolute right-full mr-4 bg-[#1e3a5f] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-xl whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">
+      <span className="absolute right-full mr-4 bg-accent text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-xl whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">
         Chat with Support
       </span>
 

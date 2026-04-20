@@ -5,6 +5,7 @@ import Header from '../../../components/Header';
 import { Calendar, Filter, Clock, MoreVertical, X, Check, Truck, AlertCircle } from 'lucide-react';
 
 export default function BranchDashboard() {
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
   const [selectedBranch, setSelectedBranch] = useState('');
   const [bookings, setBookings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +29,7 @@ export default function BranchDashboard() {
         filterParams += `&filters[AppointmentDate][$eq]=${today}`;
       }
 
-      const res = await fetch(`http://localhost:1338/api/bookings?${filterParams}&sort[0]=AppointmentTime:asc`);
+      const res = await fetch(`${STRAPI_URL}/api/bookings?${filterParams}&sort[0]=AppointmentTime:asc`);
       const json = await res.json();
       if (json.data) setBookings(json.data);
     } catch (err) {
@@ -40,7 +41,7 @@ export default function BranchDashboard() {
 
   const updateStatus = async (id: number, newStatus: string, reason?: string) => {
     try {
-      const res = await fetch(`http://localhost:1338/api/bookings/${id}`, {
+      const res = await fetch(`${STRAPI_URL}/api/bookings/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

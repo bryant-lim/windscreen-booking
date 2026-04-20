@@ -86,7 +86,13 @@ export default function ManageBookingDrawer({
           setBlockedDays((attr.ClosedDaysOfWeek || '').split(',').map((s: any) => s.trim()).filter(Boolean));
           setBlockedDates((attr.SpecificClosedDates || '').split(',').map((s: any) => {
              const t = s.trim(); if (!t.includes('-')) return null;
-             const [d, m, y] = t.split('-'); return (d && m && y) ? `${y}-${m}-${d}` : null;
+             const parts = t.split('-');
+             if (parts.length !== 3) return null;
+             // If already YYYY-MM-DD
+             if (parts[0].length === 4) return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+             // Otherwise assume DD-MM-YYYY
+             const [d, m, y] = parts;
+             return (d && m && y) ? `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}` : null;
           }).filter(Boolean) as string[]);
        }
     }
@@ -199,7 +205,7 @@ export default function ManageBookingDrawer({
         {/* Header */}
         <div className="p-8 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-md z-10">
           <div>
-            <h2 className="text-xl font-black text-[#1e3a5f] tracking-tight">Manage Appointment</h2>
+            <h2 className="text-xl font-black text-primary tracking-tight">Manage Appointment</h2>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ref: {b.ReferenceNumber}</p>
           </div>
           <button 
@@ -215,7 +221,7 @@ export default function ManageBookingDrawer({
           
           {/* Section 1: Branch */}
           <div className="space-y-4">
-             <div className="flex items-center gap-2 text-[#1e3a5f] ml-1">
+             <div className="flex items-center gap-2 text-primary ml-1">
                 <MapPin className="w-3.5 h-3.5" />
                 <label className="text-[11px] font-black capitalize tracking-wide">Change Branch</label>
              </div>
@@ -230,7 +236,7 @@ export default function ManageBookingDrawer({
 
           {/* Section 2: Date & Time */}
           <div className="space-y-6">
-             <div className="flex items-center gap-2 text-[#1e3a5f] ml-1">
+             <div className="flex items-center gap-2 text-primary ml-1">
                 <CalendarDays className="w-3.5 h-3.5" />
                 <label className="text-[11px] font-black capitalize tracking-wide">Reschedule Date & Time</label>
              </div>
@@ -244,15 +250,15 @@ export default function ManageBookingDrawer({
                 />
                 
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-[#1e3a5f]/60 ml-1">
+                  <div className="flex items-center gap-2 text-primary/60 ml-1">
                     <Clock className="w-3.5 h-3.5" />
                     <label className="text-[10px] font-bold capitalize">Available Slots</label>
                   </div>
                   
                   {fetchingSlots ? (
                     <div className="p-10 flex flex-col items-center justify-center space-y-2 bg-slate-50 rounded-2xl border border-dashed border-slate-200 opacity-50">
-                      <Loader2 className="w-5 h-5 animate-spin text-[#1e3a5f]" />
-                      <span className="text-[9px] font-bold text-[#1e3a5f]/40 uppercase tracking-widest">Checking Slots...</span>
+                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                      <span className="text-[9px] font-bold text-primary/40 uppercase tracking-widest">Checking Slots...</span>
                     </div>
                   ) : availableTimes.length > 0 ? (
                     <div className="grid grid-cols-3 gap-3">
@@ -263,7 +269,7 @@ export default function ManageBookingDrawer({
                              key={t}
                              disabled={taken}
                              onClick={() => setFormData(prev => ({...prev, time: t}))}
-                             className={`p-3 border rounded-2xl text-[10px] font-black transition-all ${taken ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed opacity-50' : formData.time === t ? 'bg-[#1e3a5f] text-white border-[#1e3a5f] shadow-lg shadow-[#1e3a5f]/20' : 'bg-white border-slate-100 text-slate-500 hover:border-[#1e3a5f]/30'}`}
+                             className={`p-3 border rounded-2xl text-[10px] font-black transition-all ${taken ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed opacity-50' : formData.time === t ? 'bg-accent text-white border-accent shadow-lg shadow-accent/20' : 'bg-white border-slate-100 text-slate-500 hover:border-accent/30'}`}
                            >
                              <span className={taken ? 'line-through' : ''}>{t}</span>
                            </button>
@@ -281,7 +287,7 @@ export default function ManageBookingDrawer({
 
           {/* Section 3: Documents */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2 text-[#1e3a5f] ml-1">
+            <div className="flex items-center gap-2 text-primary ml-1">
               <FileUp className="w-3.5 h-3.5" />
               <label className="text-[11px] font-black capitalize tracking-wide">Manage Documents</label>
             </div>
@@ -291,7 +297,7 @@ export default function ManageBookingDrawer({
                <div className="flex flex-wrap gap-2">
                  {formData.existingFiles.map((file) => (
                    <div key={file.id} className="group relative">
-                      <div className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold text-[#1e3a5f] flex items-center gap-2">
+                      <div className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold text-primary flex items-center gap-2">
                          <span className="truncate max-w-[100px]">{file.name}</span>
                          <button 
                            onClick={() => removeExistingFile(file.id)}
@@ -313,9 +319,9 @@ export default function ManageBookingDrawer({
                  ))}
                </div>
 
-               <label className="w-full border-2 border-dashed border-[#1e3a5f]/20 p-8 rounded-[30px] flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all">
-                  <FileUp className="w-6 h-6 text-[#1e3a5f]/20 mb-2" />
-                  <span className="text-[10px] font-black text-[#1e3a5f]/40 uppercase tracking-widest">Update Documents</span>
+               <label className="w-full border-2 border-dashed border-primary/20 p-8 rounded-[30px] flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all">
+                  <FileUp className="w-6 h-6 text-primary/20 mb-2" />
+                  <span className="text-[10px] font-black text-primary/40 uppercase tracking-widest">Update Documents</span>
                   <input type="file" multiple className="hidden" onChange={handleFileUpload} />
                </label>
             </div>
@@ -331,7 +337,7 @@ export default function ManageBookingDrawer({
           <button 
             onClick={handleSave}
             disabled={loading || !formData.time || success}
-            className={`w-full py-4 bg-[#1e3a5f] text-white rounded-[20px] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-[#1e3a5f]/20 flex items-center justify-center gap-3 transition-all ${loading || !formData.time ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#152a45] hover:scale-[1.01]'}`}
+            className={`w-full py-4 bg-primary text-white rounded-[20px] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 flex items-center justify-center gap-3 transition-all ${loading || !formData.time ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent hover:scale-[1.01]'}`}
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Save className="w-4 h-4" />}
             {loading ? 'Saving Changes...' : 'Save & Confirm'}

@@ -28,6 +28,7 @@ interface BranchSession {
 }
 
 export default function BranchDashboard() {
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
   const [session, setSession] = useState<BranchSession | null>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,7 +60,7 @@ export default function BranchDashboard() {
       setIsLoading(true);
       console.log("🛠️ Fetching for branch command center:", session.name);
       
-      const res = await fetch(`http://localhost:1338/api/bookings?filters[BranchName][BranchName][$eq]=${encodeURIComponent(session.name)}&sort[0]=AppointmentDate:asc&sort[1]=AppointmentTime:asc&populate[0]=InsuranceFile&populate[1]=BranchName`);
+      const res = await fetch(`${STRAPI_URL}/api/bookings?filters[BranchName][BranchName][$eq]=${encodeURIComponent(session.name)}&sort[0]=AppointmentDate:asc&sort[1]=AppointmentTime:asc&populate[0]=InsuranceFile&populate[1]=BranchName`);
       const data = await res.json();
       
       if (data.data) {
@@ -81,7 +82,7 @@ export default function BranchDashboard() {
     setIsUpdating(String(targetId));
     
     try {
-      const res = await fetch(`http://localhost:1338/api/bookings/${targetId}`, {
+      const res = await fetch(`${STRAPI_URL}/api/bookings/${targetId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data: { Status: newStatus } })
@@ -169,7 +170,7 @@ export default function BranchDashboard() {
     <main className="min-h-screen bg-[#fafbfc] flex flex-col font-inter text-slate-900 pb-20">
 
       {/* Industrial Sub-Header */}
-      <div className="bg-[#1e3a5f] text-white py-12 md:py-16 px-6">
+      <div className="bg-[#f97316] text-white py-12 md:py-16 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="space-y-3">
              <div className="flex items-center gap-2">
@@ -236,7 +237,7 @@ export default function BranchDashboard() {
                onClick={() => setFocusTab(tab.id as any)}
                className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-3xl transition-all duration-300 group ${
                  focusTab === tab.id 
-                 ? 'bg-[#1e3a5f] text-white shadow-2xl shadow-blue-500/20 active:scale-95' 
+                 ? 'bg-[#f97316] text-white shadow-2xl shadow-blue-500/20 active:scale-95' 
                  : 'hover:bg-slate-50 text-slate-400'
                }`}
              >
@@ -251,13 +252,13 @@ export default function BranchDashboard() {
 
         {/* Search Bar (High Visibility) */}
         <div className="relative group">
-          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#1e3a5f] transition-colors" />
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#f97316] transition-colors" />
           <input 
             type="text" 
             placeholder="Search by Car Plate / Driver Name / Ref ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-6 py-6 font-black text-[#1e3a5f] text-sm shadow-xl focus:ring-4 focus:ring-blue-500/5 outline-none"
+            className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-6 py-6 font-black text-[#f97316] text-sm shadow-xl focus:ring-4 focus:ring-blue-500/5 outline-none"
           />
         </div>
 
@@ -278,7 +279,7 @@ export default function BranchDashboard() {
              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{focusTab === 'Total Completed' ? 'History' : focusTab}</p>
           </div>
           {isLoading ? (
-            <div className="py-20 text-center"><Loader2 className="w-10 h-10 animate-spin text-[#1e3a5f] mx-auto opacity-20" /></div>
+            <div className="py-20 text-center"><Loader2 className="w-10 h-10 animate-spin text-[#f97316] mx-auto opacity-20" /></div>
           ) : displayedList.length === 0 ? (
             <div className="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100 text-slate-300 font-bold text-sm tracking-widest">No Entries For This Period</div>
           ) : (
@@ -311,7 +312,7 @@ export default function BranchDashboard() {
         <div className="flex flex-col md:flex-row gap-8 items-center justify-between relative z-10">
           
           <div className="flex items-center gap-6 md:w-1/4 shrink-0">
-             <div className={`${isPinned ? 'bg-orange-500' : 'bg-[#1e3a5f]'} px-6 py-5 rounded-2xl flex flex-col items-center justify-center shadow-xl min-w-[140px] transition-colors`}>
+             <div className={`${isPinned ? 'bg-orange-500' : 'bg-[#f97316]'} px-6 py-5 rounded-2xl flex flex-col items-center justify-center shadow-xl min-w-[140px] transition-colors`}>
                 <p className="text-xl font-black text-white tracking-[0.1em]">{attrs.CarPlateNumber}</p>
              </div>
              <div className={`px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.1em] border ${getStatusColor(attrs.Status)}`}>
@@ -338,7 +339,7 @@ export default function BranchDashboard() {
                           return (
                             <a 
                               key={f.id} 
-                              href={`http://localhost:1338${fileAttrs.url}`} 
+                              href={`${STRAPI_URL}${fileAttrs.url}`} 
                               target="_blank" 
                               className="w-5 h-5 flex items-center justify-center bg-white text-blue-600 text-[9px] font-black rounded-md border border-blue-200 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
                             >
@@ -350,7 +351,7 @@ export default function BranchDashboard() {
                    );
                 })()}
              </div>
-             <h4 className="text-sm font-black text-[#1e3a5f] uppercase tracking-tight truncate leading-tight">
+             <h4 className="text-sm font-black text-[#f97316] uppercase tracking-tight truncate leading-tight">
                 {vehicle?.year} {vehicle?.make} {vehicle?.model}
              </h4>
              <p className="text-[10px] font-black text-slate-500 uppercase tracking-tight truncate">

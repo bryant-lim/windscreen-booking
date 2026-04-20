@@ -46,25 +46,25 @@ const Combobox: React.FC<ComboboxProps> = ({
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full p-3.5 pl-6 text-left border rounded-2xl flex items-center justify-between transition-all duration-300 ${
-          disabled ? 'bg-slate-50 border-slate-100 opacity-40 cursor-not-allowed' : 
-          isOpen ? 'bg-white border-[#1e3a5f] shadow-xl shadow-[#1e3a5f]/5 ring-1 ring-[#1e3a5f]/10' : 'bg-transparent border-[#1e3a5f]/20 hover:border-[#1e3a5f]'
+          disabled ? 'bg-slate-50 border-slate-100 opacity-70 cursor-not-allowed' : 
+          isOpen ? 'bg-white border-primary shadow-xl shadow-primary/5 ring-1 ring-primary/10' : 'bg-transparent border-primary/20 hover:border-primary'
         }`}
       >
-        <span className={`text-[11px] font-bold capitalize truncate ${value ? 'text-[#1e3a5f]' : 'text-slate-400'}`}>
+        <span className={`text-[11px] font-bold capitalize truncate ${value ? 'text-primary' : 'text-slate-500'}`}>
           {value || placeholder}
         </span>
-        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-500 ${isOpen ? 'rotate-180 text-[#1e3a5f]' : 'text-slate-300'}`} />
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-500 ${isOpen ? 'rotate-180 text-primary' : 'text-slate-300'}`} />
       </button>
 
       {/* DROPDOWN: THE PORTAL ARCHITECTURE (NO CLIPPING, HIGH DENSITY) */}
       {isOpen && !disabled && (
-        <div className="absolute top-full mt-2 w-full bg-white border border-[#1e3a5f]/10 rounded-2xl shadow-[0_30px_70px_-15px_rgba(30,58,95,0.2)] z-[100] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
+        <div className="absolute top-full mt-2 w-full bg-white border border-primary/10 rounded-2xl shadow-[0_30px_70px_-15px_rgba(30,58,95,0.2)] z-[100] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
           <div className="p-3 border-b border-slate-50 bg-white sticky top-0 z-10">
              <div className="relative flex items-center">
                 <Search className="absolute left-3.5 w-3.5 h-3.5 text-slate-300" />
                 <input 
                   autoFocus
-                  className="w-full bg-slate-50/80 border-0 p-3 pl-10 rounded-xl text-[11px] font-bold outline-none focus:ring-2 focus:ring-[#1e3a5f]/5 transition-all placeholder:text-slate-300"
+                  className="w-full bg-slate-50/80 border-0 p-3 pl-10 rounded-xl text-[11px] font-bold outline-none focus:ring-2 focus:ring-accent/5 transition-all placeholder:text-slate-500"
                   placeholder="Search..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -78,8 +78,8 @@ const Combobox: React.FC<ComboboxProps> = ({
               filteredOptions.map((opt, i) => (
                 <button
                   key={i}
-                  className={`w-full text-left p-3 rounded-xl text-[10px] font-black capitalize transition-all mb-0.5 flex items-center justify-between ${
-                    value === opt ? 'bg-[#1e3a5f] text-white shadow-lg' : 'text-slate-500 hover:bg-[#1e3a5f]/5 hover:text-[#1e3a5f]'
+                  className={`w-full text-left p-3 rounded-xl text-[12px] font-semibold capitalize transition-all mb-0.5 flex items-center justify-between ${
+                    value === opt ? 'bg-accent text-white shadow-lg' : 'text-slate-500 hover:bg-accent/5 hover:text-accent'
                   }`}
                   onClick={() => {
                     onChange(opt);

@@ -8,6 +8,7 @@ export default function BranchLogin() {
   const [formData, setFormData] = useState({ branchCode: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
 
   // Check if already logged in as a branch
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function BranchLogin() {
 
     try {
       // 1. Fetch the branch by Code
-      const res = await fetch(`http://localhost:1338/api/branch-datas?filters[BranchCode][$eq]=${formData.branchCode.toUpperCase()}`);
+      const res = await fetch(`${STRAPI_URL}/api/branch-datas?filters[BranchCode][$eq]=${formData.branchCode.toUpperCase()}`);
       const data = await res.json();
 
       if (!data.data || data.data.length === 0) {
@@ -63,7 +64,7 @@ export default function BranchLogin() {
           
           {/* Clean Portal Header */}
           <div className="text-center mb-10">
-            <h1 className="text-2xl font-black text-[#1e3a5f] tracking-tighter mb-2">Windscreen2U Branch Portal</h1>
+            <h1 className="text-2xl font-black text-[#f97316] tracking-tighter mb-2">Windscreen2U Branch Portal</h1>
           </div>
 
           {/* Secure Vault Container */}
@@ -83,7 +84,7 @@ export default function BranchLogin() {
                     placeholder="E.G. SEMENYIH"
                     value={formData.branchCode}
                     onChange={(e) => setFormData({ ...formData, branchCode: e.target.value })}
-                    className="block w-full pl-11 pr-4 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl font-black text-[#1e3a5f] text-xs placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-[#1e3a5f] transition-all uppercase tracking-widest outline-none"
+                    className="block w-full pl-11 pr-4 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl font-black text-[#f97316] text-xs placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-[#f97316] transition-all uppercase tracking-widest outline-none"
                   />
                 </div>
               </div>
@@ -101,7 +102,7 @@ export default function BranchLogin() {
                       placeholder="••••••••"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="block w-full pl-11 pr-4 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl font-black text-[#1e3a5f] text-xs placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-orange-500/5 focus:border-[#f5a623] transition-all tracking-widest outline-none"
+                      className="block w-full pl-11 pr-4 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl font-black text-[#f97316] text-xs placeholder:text-slate-200 focus:bg-white focus:ring-4 focus:ring-orange-500/5 focus:border-[#f5a623] transition-all tracking-widest outline-none"
                     />
                  </div>
               </div>
@@ -118,7 +119,7 @@ export default function BranchLogin() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-16 flex items-center justify-between px-6 bg-[#1e3a5f] text-white rounded-2xl font-black text-[12px] tracking-[0.2em] shadow-2xl shadow-blue-900/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="w-full h-16 flex items-center justify-between px-6 bg-[#f97316] text-white rounded-2xl font-black text-[12px] tracking-[0.2em] shadow-2xl shadow-blue-900/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2 mx-auto"><Loader2 className="w-4 h-4 animate-spin text-white" /> Authenticating...</span>

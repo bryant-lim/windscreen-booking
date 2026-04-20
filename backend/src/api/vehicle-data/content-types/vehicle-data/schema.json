@@ -34,6 +34,9 @@
       "type": "decimal",
       "required": true
     },
+    "Price_Aftermarket": {
+      "type": "decimal"
+    },
     "Deposit_Required": {
       "type": "boolean",
       "default": false
@@ -41,6 +44,9 @@
     "Deposit_Percentage": {
       "type": "decimal",
       "default": 10.0
+    },
+    "Repair_Price": {
+      "type": "decimal"
     }
   }
 }
